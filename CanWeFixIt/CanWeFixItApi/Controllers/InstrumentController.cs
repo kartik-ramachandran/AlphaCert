@@ -15,11 +15,12 @@ namespace CanWeFixItApi.Controllers
         {
             _database = database;
         }
-        
+
         // GET
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Instrument>>> Get()
         {   
-            return Ok(_database.Instruments().Result);
+            return Ok(_database.GetActiveInstruments().Result);
         }
     }
 }

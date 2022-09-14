@@ -6,15 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 namespace CanWeFixItApi.Controllers
 {
     [ApiController]
-    [Route("v2/marketdata")]
+    [Route("v1/marketdata")]
     public class MarketDataController : ControllerBase
     {
+        private readonly IDatabaseService _database;
+
+        public MarketDataController(IDatabaseService database)
+        {
+            _database = database;
+        }
         // GET
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<MarketDataDto>>> Get()
         {
-            // TODO:
-
-            return NotFound();
+            return Ok(_database.GetActiveMarketData().Result);
         }
     }
 }

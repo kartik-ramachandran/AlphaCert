@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -22,15 +23,36 @@ namespace CanWeFixItService
             _connection = new SqliteConnection(connectionString);
             _connection.Open();
         }
-        
-        public async Task<IEnumerable<Instrument>> Instruments()
+
+        public void CleanUpDatabase()
         {
-            return await _connection.QueryAsync<Instrument>("SQL GOES HERE");
+            //
         }
 
-        public async Task<IEnumerable<MarketData>> MarketData()
+        public async Task<IEnumerable<Instrument>> GetActiveInstruments()
         {
-            return await _connection.QueryAsync<MarketData>("SELECT Id, DataValue FROM MarketData WHERE Active = 0");
+            return await _connection.QueryAsync<Instrument>("SELECT Id, Sedol, Name, Active FROM Instruments WHERE Active = 1");
+        }
+
+        public async Task<IEnumerable<MarketData>> GetActiveMarketData()
+        {
+            return await _connection.QueryAsync<MarketData>("SELECT Id, DataValue, Sedol, Active FROM MarketData WHERE Active = 1");
+        }
+
+        public async Task<IEnumerable<MarketValuation>> GetMarketValuations()
+        {
+            var activeMarketData = await GetActiveMarketData();
+
+            var returnValuation = new List<MarketValuation>
+            {
+                new MarketValuation
+                {
+                    Name = "DataValueTotal",
+                    Total = activeMarketData.Sum(data => data.DataValue).Value
+                }
+            };
+
+            return returnValuation;
         }
 
         /// <summary>

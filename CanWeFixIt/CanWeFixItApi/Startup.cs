@@ -1,3 +1,4 @@
+using CanWeFixIt.Logging;
 using CanWeFixItService;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,7 @@ namespace CanWeFixItApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CanWeFixItApi", Version = "v1" });
             });
+            services.AddSingleton<ICustomLogger, CustomLogger>();
             services.AddSingleton<IDatabaseService, DatabaseService>();
         }
 
