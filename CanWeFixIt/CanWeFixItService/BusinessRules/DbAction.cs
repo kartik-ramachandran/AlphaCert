@@ -19,7 +19,16 @@ namespace CanWeFixItService.BusinessRules
 
         public async Task<IEnumerable<Instrument>> GetInstruments()
         {
-            return await _myDbContext.Instrument.ToListAsync();
+            try
+            {
+                return await _myDbContext.Instrument.ToListAsync();
+            }
+            catch
+            {
+                _customLogger.LogInfo("No Instruments found");
+            }
+
+            return null;
         }
 
         public async Task<IEnumerable<Instrument>> GetActiveInstruments()
@@ -37,7 +46,16 @@ namespace CanWeFixItService.BusinessRules
 
         public async Task<IEnumerable<MarketData>> GetMarketData()
         {
-            return await _myDbContext.MarketData.ToListAsync();
+            try
+            {
+                return await _myDbContext.MarketData.ToListAsync();
+            }
+            catch
+            {
+                _customLogger.LogInfo("No MarketData found");
+            }
+
+            return null;
         }
 
         public async Task<IEnumerable<MarketDataDto>> GetActiveMarketData()
