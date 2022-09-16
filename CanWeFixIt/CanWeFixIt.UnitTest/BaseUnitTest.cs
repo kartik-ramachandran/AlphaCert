@@ -1,6 +1,9 @@
-using CanWeFixItService;
+using CanWeFixItService.BusinessRules;
+using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CanWeFixIt.UnitTest
 {
@@ -8,7 +11,7 @@ namespace CanWeFixIt.UnitTest
     {
         private UnitTestSetup _initialize;
         private ServiceProvider _serviceprovider;
-        private IDatabaseService _databaseService;
+        private IDbAction _databaseService;
 
         [OneTimeSetUp]
         public void SetUp()
@@ -17,34 +20,49 @@ namespace CanWeFixIt.UnitTest
 
             _serviceprovider = _initialize.CreateServiceCollection();
 
-            _databaseService = _serviceprovider.GetService<IDatabaseService>();
+            _databaseService = _serviceprovider.GetService<IDbAction>();
+        }               
 
-            _databaseService.SetupDatabase();
-        }
-               
-
-        [TearDown]
-        public void TearDown()
+        [Test]
+        public async Task Instrument_Get_Success()
         {
-            _databaseService.CleanUpDatabase();
+            var getInstruments = await _databaseService.GetInstruments();
+
+            getInstruments.Should().NotBeNull();
         }
 
         [Test]
-        public void Instrument_Get_Success()
+        public async Task MarketData_Get_Success()
         {
-            var getActiveInstruments = _databaseService.GetActiveInstruments();
+            var getMarketData = await _databaseService.GetMarketData();
+
+            getMarketData.Should().NotBeNull();
         }
 
         [Test]
-        public void MarketData_Get_Success()
+        public async Task ActiveInstrument_Get_Success()
         {
-            var getActiveMarketData = _databaseService.GetActiveMarketData();
+            var getActiveInstruments = await _databaseService.GetActiveInstruments();
+
+            getActiveInstruments.Should().NotBeNull();
         }
 
         [Test]
-        public void MarketValuations_Get_Success()
+        public async Task ActiveMarketData_Get_Success()
         {
-            var getMarketValuations = _databaseService.GetMarketValuations();
+            var getActiveMarketData = await _databaseService.GetActiveMarketData();
+
+            getActiveMarketData.Should().NotBeNull();
+        }
+
+        [Test]
+        public async Task MarketValuations_Get_Success()
+        {
+            var getMarketValuations = await _databaseService.GetMarketValuations();
+
+            getMarketValuations.Should().NotBeNull();
+            getMarketValuations.Should().ContainSingle();
+            getMarketValuations.ToList()[0].Total.Should().BeGreaterThanOrEqualTo(6666);
         }
     }
 }

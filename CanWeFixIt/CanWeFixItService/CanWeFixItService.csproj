@@ -6,11 +6,15 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.0.90" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
       <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.11" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.17" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.17" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\CanWeFixIt.Domain\CanWeFixIt.Domain.csproj" />
+      <ProjectReference Include="..\CanWeFixIt.Logging\CanWeFixIt.Logging.csproj" />
     </ItemGroup>
 
 </Project>

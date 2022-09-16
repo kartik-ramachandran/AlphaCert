@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using CanWeFixItService;
+using CanWeFixItService.BusinessRules;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CanWeFixItApi.Controllers
@@ -9,9 +10,9 @@ namespace CanWeFixItApi.Controllers
     [Route("v1/marketdata")]
     public class MarketDataController : ControllerBase
     {
-        private readonly IDatabaseService _database;
+        private readonly IDbAction _database;
 
-        public MarketDataController(IDatabaseService database)
+        public MarketDataController(IDbAction database)
         {
             _database = database;
         }

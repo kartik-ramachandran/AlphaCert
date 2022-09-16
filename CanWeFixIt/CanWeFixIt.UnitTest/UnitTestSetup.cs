@@ -1,5 +1,7 @@
 ﻿using CanWeFixIt.Logging;
 using CanWeFixItService;
+using CanWeFixItService.BusinessRules;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CanWeFixIt.UnitTest
@@ -11,7 +13,16 @@ namespace CanWeFixIt.UnitTest
             var services = new ServiceCollection();
 
             services.AddTransient<ICustomLogger, CustomLogger>();
-            services.AddTransient<IDatabaseService, DatabaseService>();
+            services.AddDbContext<MyDbContext>(options =>
+                options.UseSqlite("DataSource=DatabaseService;"));
+            //services.AddTransient<IDatabaseService, DatabaseService>();
+            services.AddTransient<IDbAction, DbAction>();
+
+            var dbOptionBuilder = new DbContextOptions<MyDbContext>();
+
+            var context = new MyDbContext(dbOptionBuilder);
+
+            MyDbContextSeeder.Seed(context);
 
             return services.BuildServiceProvider();
         }
